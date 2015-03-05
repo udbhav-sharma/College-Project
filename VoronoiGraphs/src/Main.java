@@ -1,5 +1,5 @@
 import graphAlgo.Graph;
-import graphAlgo.Graph.Vertex;
+import graphAlgo.Vertex;
 import graphAlgo.ParallelDijisktra;
 
 import java.awt.Point;
@@ -37,10 +37,8 @@ public class Main {
 		}
 		in.close();
 		
-		Log.l(G);
-		
 		in = new Scanner(new File("res/pointofinterests"));
-		ArrayList<Vertex> Sources = new ArrayList<Graph.Vertex>();
+		ArrayList<Vertex> Sources = new ArrayList<Vertex>();
 		while(in.hasNextInt()){
 			x = in.nextInt();
 			y = in.nextInt();
@@ -52,7 +50,6 @@ public class Main {
 		ParallelDijisktra dijisktra = new ParallelDijisktra();
 		dijisktra.init(G, Sources);
 		dijisktra.generateVoronoi();
-		
 		Log.l(G);
 		
 	}

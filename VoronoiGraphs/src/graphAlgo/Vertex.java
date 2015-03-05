@@ -28,17 +28,17 @@ public class Vertex implements Comparable<Vertex> {
 	}
 	
 	public String toString(){
-		String output="Vertex:\n";
-		output+=this.p+"\n";
-		output+="Dist:"+this.dist+"\n";
+		String output="-------\nVertex: ";
+		output+="("+this.p.getX()+","+this.p.getY()+")\n";
+		output+="Dist: "+this.dist+"\n";
 		if(this.pi!=null)
-			output+="PI:"+this.pi.p+"\n";
+			output+="PI: "+"("+this.pi.p.getX()+","+this.pi.p.getY()+")\n";
 		else
-			output+="PI:"+this.pi+"\n";
+			output+="PI: "+this.pi+"\n";
 		output+="PI's:\n";
 	
 		for(Pair<Vertex, Integer> p: this.pis){
-			output += p.getElement0().p+" : "+p.getElement1()+"\n";
+			output += "("+p.getElement0().p.getX()+","+p.getElement0().p.getY()+")"+" : "+p.getElement1()+"\n";
 		}
 		return output;
 	}

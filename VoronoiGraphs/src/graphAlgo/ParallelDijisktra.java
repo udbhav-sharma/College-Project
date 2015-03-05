@@ -75,4 +75,27 @@ public class ParallelDijisktra {
 		return p1.distance(p2);
 	}
 	
+	public void generateVoronoiCell(Graph G,ArrayList<Vertex> Sources){
+		String output;
+		for(Vertex v: Sources){
+			output="";
+			output+="("+v.p.getX()+","+v.p.getY()+")";
+			output+=" | ";
+			output+="("+v.p.getX()+","+v.p.getY()+")";
+			Log.l(output);
+		}
+		
+		for(Vertex v: G.getV()){
+			for(Pair<Vertex,Integer> pair : v.pis){
+				if(v.dist == pair.getElement1()){
+					output="";
+					output+="("+v.p.getX()+","+v.p.getY()+")";
+					output+=" | ";
+					output+="("+pair.getElement0().p.getX()+","+pair.getElement0().p.getY()+")";
+					Log.l(output);
+				}
+			}
+		}
+	}
+	
 } 

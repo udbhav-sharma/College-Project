@@ -51,6 +51,7 @@ public class Main {
 		dijisktra.init(G, Sources);
 		dijisktra.generateVoronoi();
 		Log.l(G);
+		dijisktra.generateVoronoiCell(G,Sources);
 		
 	}
 }

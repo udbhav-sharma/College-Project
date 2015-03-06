@@ -27,6 +27,7 @@ public class ParallelDijisktra {
 			if(isSource){
 				v.dist = 0;
 				v.pi = v;
+				v.pis.add(new Pair<Vertex,Integer>(v,0));
 			}
 			Q.add(v);
 		}
@@ -55,16 +56,20 @@ public class ParallelDijisktra {
 						Q.add(e.v);
 					}
 					
-					if(newDist <= e.v.dist){
+					for(Pair<Vertex,Integer> u_p : u.pis){
 						sflag=false;
-						for(Pair<Vertex,Integer> p : e.v.pis)
-							if(p.getElement0().p.equals(u.pi.p)) {
+						for(Pair<Vertex,Integer> v_p : e.v.pis){
+							if(u_p.getElement0().p.equals(v_p.getElement0().p)){
 								sflag=true;
-								if( newDist < p.getElement1())
-									p.setElement1(newDist);
+								newDist = u_p.getElement1() + e.w;
+								if(newDist < v_p.getElement1()){
+									v_p.setElement1(newDist);
+								}
+								break;
 							}
+						}
 						if(!sflag)
-							e.v.pis.add(new Pair<Vertex,Integer>(u.pi,newDist));
+							e.v.pis.add(new Pair<Vertex,Integer>(u_p.getElement0(),newDist));
 					}
 				}
 			}
@@ -75,15 +80,8 @@ public class ParallelDijisktra {
 		return p1.distance(p2);
 	}
 	
-	public void generateVoronoiCell(Graph G,ArrayList<Vertex> Sources){
+	public void generateVoronoiCell(Graph G){
 		String output;
-		for(Vertex v: Sources){
-			output="";
-			output+="("+v.p.getX()+","+v.p.getY()+")";
-			output+=" | ";
-			output+="("+v.p.getX()+","+v.p.getY()+")";
-			Log.l(output);
-		}
 		
 		for(Vertex v: G.getV()){
 			for(Pair<Vertex,Integer> pair : v.pis){

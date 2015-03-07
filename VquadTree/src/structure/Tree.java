@@ -1,7 +1,7 @@
 package structure;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.HashSet;
 
 import structure.Point;
 import structure.Rectangle;
@@ -74,16 +74,17 @@ public class Tree {
 		return newNode;
 	}
 	
-	public ArrayList< Pair<Point, Point>> filterPoints(ArrayList< Pair<Point, Point>> points, Rectangle r){
-		ArrayList< Pair<Point, Point>> newPoints=new ArrayList<Pair<Point,Point>>();
+	public Pair<Point,Double> getGenerator(Point p){
+		HashSet<Pair<Point,Double>> result = new HashSet<Pair<Point,Double>>();
+		this.get1NN(this.root,p,result);
 		
-		for(Pair<Point,Point> pair:points){
-			if(r.contains( pair.getElement0())){
-				newPoints.add(pair);
-			}
+		Pair<Point,Double> minPair = null;
+		
+		for(Pair<Point,Double> pair:result){
+			if(minPair == null || pair.getElement1()<minPair.getElement1())
+				minPair=pair;
 		}
-		
-		return newPoints;
+		return minPair;
 	}
 	
 	public String toString(){
@@ -94,6 +95,38 @@ public class Tree {
 	
 	public int getheight(){
 		return height(this.root);
+	}
+	
+	private ArrayList<Pair<Point, Point>> filterPoints(ArrayList<Pair<Point, Point>> points, Rectangle r){
+		ArrayList<Pair<Point, Point>> newPoints=new ArrayList<Pair<Point,Point>>();
+		
+		for(Pair<Point,Point> pair:points){
+			if(r.contains( pair.getElement0())){
+				newPoints.add(pair);
+			}
+		}
+		
+		return newPoints;
+	}
+	
+	private void get1NN(Node node, Point p, HashSet<Pair<Point,Double>> result){
+		if(node.r.contains(p)){
+			if(node.isLeaf){
+				boolean isPresent = false;
+				for(Pair<Point,Double> pair:result){
+					if(pair.getElement0().equals(node.poi))
+						isPresent=true;
+				}
+				if(!isPresent)
+					result.add(new Pair<Point,Double>(node.poi,p.distance(node.poi)));
+			}
+			else{
+				for(Node child:node.children){
+					get1NN(child, p, result);
+				}
+			}
+		}
+		return;
 	}
 	
 	private int height(Node node){

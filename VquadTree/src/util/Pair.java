@@ -29,4 +29,11 @@ public class Pair<K, V> {
     public void setElement1(V element1){
     	this.element1 = element1;
     }
+    
+    public String toString(){
+    	String output="----Pair----\n";
+    	output+="First: "+this.element0+"\n";
+    	output+="Second: "+this.element1;
+    	return output;
+    }
 }

@@ -21,7 +21,7 @@ public class Node {
 	}
 	
 	public boolean isEmpty(){
-		return this.r==null;
+		return this.r==null || this.poi==null;
 	}
 	
 	public String toString(){

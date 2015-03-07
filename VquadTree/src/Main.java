@@ -41,6 +41,21 @@ public class Main {
 		tree.init(rect, points);
 		Log.l(tree);
 		
+		Log.l(tree.getGenerator(new Point(1,2)));
+		Log.l(tree.getGenerator(new Point(2,3)));
+		Log.l(tree.getGenerator(new Point(3,4)));
+		Log.l(tree.getGenerator(new Point(4,5)));
+		Log.l(tree.getGenerator(new Point(5,6)));
+		Log.l(tree.getGenerator(new Point(6,7)));
+		Log.l(tree.getGenerator(new Point(7,8)));
+		Log.l(tree.getGenerator(new Point(8,9)));
+		Log.l(tree.getGenerator(new Point(9,10)));
+		Log.l(tree.getGenerator(new Point(11,12)));
+		
+		Log.l(tree.getGenerator(new Point(2,2)));
+		//Log.l(tree.getGenerator(new Point(3,3)));
+		Log.l(tree.getGenerator(new Point(10,11)));
+		
 		in.close();
 	}
 }

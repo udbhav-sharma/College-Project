@@ -1,8 +1,10 @@
 package structure;
 
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.LinkedList;
+
+import structure.Point;
+import structure.Rectangle;
 import util.Log;
 import util.Pair;
 
@@ -35,30 +37,38 @@ public class Tree {
 			}
 		}
 		
-		if(split){
+		if(!split){
+			newNode.setLeaf(true);
+			if(points.size()>0)
+				newNode.poi=lastPOI;
+			//Log.d(newNode);
+			/*for(Pair<Point,Point> pair: points){
+				Log.d(pair.getElement0());
+			}*/
+		}
+		else{
+			//Log.d(newNode);
 			double newX = r.getX();
 			double newY = r.getY();
 			double newW = r.getWidth();
 			double newH = r.getHeight();
+			Rectangle newRectangle;
 			
-			Rectangle newRectangle = new Rectangle();
-			
+			newRectangle = new Rectangle();
 			newRectangle.setRect(newX,newY,newW/2,newH/2);
 			newNode.children.add(formTree(newRectangle, filterPoints(points,newRectangle)));
-			
+
+			newRectangle = new Rectangle();
 			newRectangle.setRect(newX+newW/2,newY,newW/2,newH/2);
 			newNode.children.add(formTree(newRectangle, filterPoints(points,newRectangle)));
-			
-			newRectangle.setRect(newX,newY-newW/2,newW/2,newH/2);
+
+			newRectangle = new Rectangle();
+			newRectangle.setRect(newX,newY-newH/2,newW/2,newH/2);
 			newNode.children.add(formTree(newRectangle, filterPoints(points,newRectangle)));
-			
-			newRectangle.setRect(newX+newW/2,newY-newW/2,newW/2,newH/2);
+
+			newRectangle = new Rectangle();
+			newRectangle.setRect(newX+newW/2,newY-newH/2,newW/2,newH/2);
 			newNode.children.add(formTree(newRectangle, filterPoints(points,newRectangle)));
-		}
-		else{
-			newNode.setLeaf(true);
-			if(points.size()>0)
-				newNode.poi=lastPOI;
 		}
 		
 		return newNode;
@@ -78,13 +88,7 @@ public class Tree {
 	
 	public String toString(){
 		String output="---------Vquad Tree--------\n";
-		
-		int h=getheight();
-		for(int i=h;i>=0;i--){
-			printTree(this.root, h, i, output);
-			output+="\n";
-		}
-		
+		output+=printTree(this.root);
 		return output;
 	}
 	
@@ -100,16 +104,12 @@ public class Tree {
 		return h;
 	}
 	
-	private void printTree(Node node, int h, int l, String output){
-		if(h==l){
-			if(node.isLeaf){
-				output+="Rect("+node.r.getMinX()+","+node.r.getMinY()+", "+node.r.getMaxX()+","+node.r.getMaxY()+")";
-			}
-			else{
-				output+="Point("+node.r.getX()+","+node.r.getY()+")";
-			}
+	private String printTree(Node node){
+		String output="";
+		output+=node+"\n";
+		for(Node n:node.children){	
+			output+=printTree(n);
 		}
-		else
-			output+="                 ";
+		return output;
 	}
 }

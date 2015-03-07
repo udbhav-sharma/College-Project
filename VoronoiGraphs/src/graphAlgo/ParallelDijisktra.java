@@ -86,10 +86,9 @@ public class ParallelDijisktra {
 		for(Vertex v: G.getV()){
 			for(Pair<Vertex,Integer> pair : v.pis){
 				if(v.dist == pair.getElement1()){
-					output="";
-					output+="("+v.p.getX()+","+v.p.getY()+")";
+					output=v.p.getX()+" "+v.p.getY();
 					output+=" | ";
-					output+="("+pair.getElement0().p.getX()+","+pair.getElement0().p.getY()+")";
+					output+=pair.getElement0().p.getX()+" "+pair.getElement0().p.getY();
 					Log.l(output);
 				}
 			}

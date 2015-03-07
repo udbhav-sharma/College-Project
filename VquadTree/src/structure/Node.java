@@ -1,8 +1,7 @@
 package structure;
 
 import java.util.ArrayList;
-import java.awt.Rectangle;
-import java.awt.Point;
+
 
 public class Node {
 	public Rectangle r=null;
@@ -19,5 +18,18 @@ public class Node {
 	
 	public void setLeaf(boolean isLeaf){
 		this.isLeaf=isLeaf;
+	}
+	
+	public boolean isEmpty(){
+		return this.r==null;
+	}
+	
+	public String toString(){
+		String output="-----Node-----\n";
+		output+="Leaf: "+this.isLeaf+"\n";
+		output+="Rect: "+r+"\n";
+		output+="POI: "+poi+"\n";
+		output+="Children: "+children.size();
+		return output;
 	}
 }

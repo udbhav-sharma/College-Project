@@ -10,19 +10,18 @@ import structure.Rectangle;
 import structure.Tree;
 
 public class Main {
+	
+	private static ArrayList<Pair<Point, ArrayList<Point>>> points = new ArrayList<Pair<Point, ArrayList<Point>>>();
+	
 	public static void main(String args[]) throws FileNotFoundException{
 		Scanner in = new Scanner(new File("res/points"));
 		double x1,y1,x2,y2;
 		double minX=0,minY=0,maxX=0,maxY=0;
-		String delimiter;
-		
-		
-		ArrayList<Pair<Point, Point>> points = new ArrayList<Pair<Point,Point>>();
 		
 		while(in.hasNext()){
 			x1 = in.nextDouble();
 			y1 = in.nextDouble();
-			delimiter = in.next();
+			in.next();
 			x2 = in.nextDouble();
 			y2 = in.nextDouble();
 			
@@ -31,8 +30,9 @@ public class Main {
 			maxX=Math.max(maxX, x1);
 			maxY=Math.max(maxY, y1);
 			
-			points.add(new Pair<Point, Point>( new Point(x1, y1), new Point(x2, y2) ));
-			
+			Point p1 = new Point(x1, y1);
+			Point p2 = new Point(x2, y2);
+			Main.addPoint(p1,p2);
 		}
 		
 		Tree tree = new Tree();
@@ -57,5 +57,17 @@ public class Main {
 		Log.l(tree.getGenerator(new Point(10,11)));
 		
 		in.close();
+	}
+	
+	private static void addPoint(Point p1, Point p2){
+		for(Pair<Point, ArrayList<Point>> pair: points){
+			if(p1.equals(pair.getElement0())){
+				pair.getElement1().add(p2);
+				return;
+			}
+		}
+		ArrayList<Point> newList = new ArrayList<Point>();
+		newList.add(p2);
+		points.add(new Pair<Point, ArrayList<Point>>(p1, newList));
 	}
 }

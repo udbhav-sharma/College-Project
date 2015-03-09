@@ -16,23 +16,24 @@ public class Tree {
 		root=new Node();
 	}
 	
-	public Node init (Rectangle r, ArrayList< Pair<Point, Point>> points){
+	public Node init (Rectangle r, ArrayList< Pair<Point, ArrayList<Point>>> points){
 		this.root = formTree(r,points);
 		
 		return this.root;
 	}
 	
-	public Node formTree( Rectangle r, ArrayList< Pair<Point, Point>> points ){
+	public Node formTree( Rectangle r, ArrayList< Pair<Point, ArrayList<Point>>> points ){
 		Node newNode = new Node();
 		boolean split = false;
-		Point lastPOI = null;
+		ArrayList<Point> lastPOI = null;
 
 		newNode.setR(r);
 		
 		if(points.size()>0){
 			lastPOI = points.get(0).getElement1();
-			for(Pair<Point,Point> pair:points){
-				if(!pair.getElement1().equals(lastPOI))
+			for(Pair<Point,ArrayList<Point>> pair:points){
+				lastPOI = intersect(lastPOI,pair.getElement1());
+				if(lastPOI.size()==0)
 					split = true;
 			}
 		}
@@ -40,7 +41,7 @@ public class Tree {
 		if(!split){
 			newNode.setLeaf(true);
 			if(points.size()>0)
-				newNode.poi=lastPOI;
+				newNode.poi=lastPOI.get(0);
 			//Log.d(newNode);
 			/*for(Pair<Point,Point> pair: points){
 				Log.d(pair.getElement0());
@@ -97,10 +98,25 @@ public class Tree {
 		return height(this.root);
 	}
 	
-	private ArrayList<Pair<Point, Point>> filterPoints(ArrayList<Pair<Point, Point>> points, Rectangle r){
-		ArrayList<Pair<Point, Point>> newPoints=new ArrayList<Pair<Point,Point>>();
+	private ArrayList<Point> intersect(ArrayList<Point> list1, ArrayList<Point> list2){
+		ArrayList<Point> newList = new ArrayList<Point>();
 		
-		for(Pair<Point,Point> pair:points){
+		for(Point p1: list1){
+			for(Point p2: list2){
+				if(p1.equals(p2)){
+					newList.add(new Point(p1));
+					break;
+				}
+			}
+		}
+		
+		return newList;
+	}
+	
+	private ArrayList<Pair<Point, ArrayList<Point>>> filterPoints(ArrayList<Pair<Point,ArrayList<Point>>> points, Rectangle r){
+		ArrayList<Pair<Point, ArrayList<Point>>> newPoints=new ArrayList<Pair<Point,ArrayList<Point>>>();
+		
+		for(Pair<Point,ArrayList<Point>> pair:points){
 			if(r.contains( pair.getElement0())){
 				newPoints.add(pair);
 			}

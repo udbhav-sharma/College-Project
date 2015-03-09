@@ -13,7 +13,11 @@ public class Point extends java.awt.Point implements Serializable {
         this.y = y;
     }
 
-
+    public Point(Point p) {
+        this.x = p.x;
+        this.y = p.y;
+    }
+    
     public double getX() {
         return x;
     }
@@ -25,7 +29,6 @@ public class Point extends java.awt.Point implements Serializable {
     public boolean equals(Point p){
     	return (this.x==p.getX() && this.y==p.getY());
     }
-
 
     @Override
     public String toString() {

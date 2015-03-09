@@ -1,8 +1,8 @@
 import graphAlgo.Graph;
 import graphAlgo.Vertex;
 import graphAlgo.ParallelDijisktra;
+import graphAlgo.Point;
 
-import java.awt.Point;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;

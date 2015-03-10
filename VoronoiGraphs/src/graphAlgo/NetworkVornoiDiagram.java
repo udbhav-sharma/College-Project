@@ -39,7 +39,7 @@ public class NetworkVornoiDiagram {
 	public static class Edge{
 		public Point p1;
 		public Point p2;
-		int w;
+		public int w;
 		
 		public Edge(Point p1,Point p2,int w){
 			this.p1=p1;

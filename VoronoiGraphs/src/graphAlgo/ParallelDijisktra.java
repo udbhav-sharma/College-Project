@@ -8,11 +8,11 @@ import util.Pair;
 public class ParallelDijisktra {
 	
 	private PriorityQueue< Vertex > Q;
-	private NetworkVornoiDiagram nvd = null;
+	private NetworkVoronoiDiagram nvd = null;
 	
 	public ParallelDijisktra(){
 		Q=new PriorityQueue<Vertex>();
-		nvd=new NetworkVornoiDiagram();
+		nvd=new NetworkVoronoiDiagram();
 	}
 	
 	public void init( Graph G ){
@@ -75,7 +75,7 @@ public class ParallelDijisktra {
 			for(Pair<Vertex,Edge> pair : v.pis){
 				if(v.dist == pair.getElement1().w){
 					this.nvd.add( pair.getElement0().p,
-							new NetworkVornoiDiagram.Edge(pair.getElement1().v.p, v.p, pair.getElement1().w) );		
+							new NetworkVoronoiDiagram.Edge(pair.getElement1().v.p, v.p, pair.getElement1().w) );		
 					output=v.p.getX()+" "+v.p.getY();
 					output+=" | ";
 					output+=pair.getElement1().v.p.getX()+" "+pair.getElement1().v.p.getY();
@@ -88,5 +88,4 @@ public class ParallelDijisktra {
 		Log.l("");
 		Log.l(this.nvd);
 	}
-	
 } 

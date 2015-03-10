@@ -5,18 +5,26 @@ import graphAlgo.Point;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 import util.Log;
 
-
 public class Main {
 	
-	public static void main(String args[]) throws FileNotFoundException{
-		Scanner in = new Scanner(new File("res/roads"));
+	public static void main(String args[]) throws FileNotFoundException{ 
 		Graph G = new Graph();
 		int i,j,x,y,w;
+		Scanner in;
+		
+		in = new Scanner(new File("res/pointofinterests"));
+		while(in.hasNextInt()){
+			x = in.nextInt();
+			y = in.nextInt();
+			G.addV(new Point(x,y),true);
+		}
+		in.close();
+		
+		in = new Scanner(new File("res/roads"));
 		while(in.hasNextInt()){
 			i = in.nextInt();
 			j = in.nextInt();
@@ -27,28 +35,18 @@ public class Main {
 			Vertex v = G.findV(new Point(x,y));
 
 			if( u == null )
-				u = G.addV(new Point(i,j));
+				u = G.addV(new Point(i,j),false);
 			
 			if( v == null )
-				v = G.addV(new Point(x,y));
+				v = G.addV(new Point(x,y),false);
 			
 			w = in.nextInt();
 			G.addE(u,v,w);
 		}
 		in.close();
 		
-		in = new Scanner(new File("res/pointofinterests"));
-		ArrayList<Vertex> Sources = new ArrayList<Vertex>();
-		while(in.hasNextInt()){
-			x = in.nextInt();
-			y = in.nextInt();
-			Sources.add(G.findV(new Point(x,y)));
-			
-		}
-		in.close();
-		
 		ParallelDijisktra dijisktra = new ParallelDijisktra();
-		dijisktra.init(G, Sources);
+		dijisktra.init(G);
 		dijisktra.generateVoronoi();
 		Log.l(G);
 		dijisktra.generateVoronoiCell(G);

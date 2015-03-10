@@ -1,7 +1,5 @@
 package graphAlgo;
 
-import java.awt.Point;
-import java.util.ArrayList;
 import java.util.PriorityQueue;
 
 import util.Log;
@@ -10,25 +8,15 @@ import util.Pair;
 public class ParallelDijisktra {
 	
 	private PriorityQueue< Vertex > Q;
+	private NetworkVornoiDiagram nvd = null;
 	
 	public ParallelDijisktra(){
 		Q=new PriorityQueue<Vertex>();
+		nvd=new NetworkVornoiDiagram();
 	}
 	
-	public void init( Graph G, ArrayList<Vertex> Sources ){
-		boolean isSource;
-		
+	public void init( Graph G ){
 		for(Vertex v: G.getV()){
-			isSource=false;
-			for(Vertex s: Sources){
-				if(v==s)
-					isSource=true;
-			}
-			if(isSource){
-				v.dist = 0;
-				v.pi = v;
-				v.pis.add(new Pair<Vertex,Integer>(v,0));
-			}
 			Q.add(v);
 		}
 	}
@@ -56,20 +44,20 @@ public class ParallelDijisktra {
 						Q.add(e.v);
 					}
 					
-					for(Pair<Vertex,Integer> u_p : u.pis){
+					for(Pair<Vertex,Edge> u_p : u.pis){
 						sflag=false;
-						for(Pair<Vertex,Integer> v_p : e.v.pis){
+						for(Pair<Vertex,Edge> v_p : e.v.pis){
 							if(u_p.getElement0().p.equals(v_p.getElement0().p)){
 								sflag=true;
-								newDist = u_p.getElement1() + e.w;
-								if(newDist < v_p.getElement1()){
-									v_p.setElement1(newDist);
+								newDist = u_p.getElement1().w + e.w;
+								if(newDist < v_p.getElement1().w){
+									v_p.setElement1(new Edge(u,newDist));
 								}
 								break;
 							}
 						}
 						if(!sflag)
-							e.v.pis.add(new Pair<Vertex,Integer>(u_p.getElement0(),newDist));
+							e.v.pis.add(new Pair<Vertex,Edge>(u_p.getElement0(),new Edge(u,newDist)));
 					}
 				}
 			}
@@ -84,15 +72,21 @@ public class ParallelDijisktra {
 		String output;
 		
 		for(Vertex v: G.getV()){
-			for(Pair<Vertex,Integer> pair : v.pis){
-				if(v.dist == pair.getElement1()){
+			for(Pair<Vertex,Edge> pair : v.pis){
+				if(v.dist == pair.getElement1().w){
+					this.nvd.add( v.p,
+							new NetworkVornoiDiagram.Edge(pair.getElement1().v.p, v.p, pair.getElement1().w) );		
 					output=v.p.getX()+" "+v.p.getY();
+					output+=" | ";
+					output+=pair.getElement1().v.p.getX()+" "+pair.getElement1().v.p.getY();
 					output+=" | ";
 					output+=pair.getElement0().p.getX()+" "+pair.getElement0().p.getY();
 					Log.l(output);
 				}
 			}
 		}
+		
+		Log.l(this.nvd);
 	}
 	
 } 

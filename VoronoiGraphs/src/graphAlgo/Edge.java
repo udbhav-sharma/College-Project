@@ -13,4 +13,8 @@ public class Edge{
 		this.v = v;
 		this.w = w;
 	}
+	
+	public String toString(){
+		return v.p+" "+w;
+	}
 }

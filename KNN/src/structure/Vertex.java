@@ -10,16 +10,24 @@ public class Vertex implements Comparable<Vertex> {
 	public int dist = Integer.MAX_VALUE;
 	public boolean flag = false;
 	public ArrayList<Edge> adjancencies;
-	public ArrayList<Pair<Vertex, Edge>> pis;
 	
 	public Vertex( Point p ){
 		this.p = (Point)p.clone();
 		this.adjancencies = new ArrayList<Edge>();
-		this.pis = new ArrayList<Pair<Vertex,Edge>>();
+	}
+	
+	public void reinit(){
+		this.pi = null;
+		this.dist = Integer.MAX_VALUE;
+		this.flag = false;
 	}
 	
 	public void addNeighbour(Vertex v, int w){
 		this.adjancencies.add(new Edge(v,w));
+	}
+	
+	public boolean equals(Vertex v){
+		return this.p.equals(v.p);
 	}
 	
 	public int compareTo(Vertex other){
@@ -34,11 +42,7 @@ public class Vertex implements Comparable<Vertex> {
 			output+="PI: "+"("+this.pi.p.getX()+","+this.pi.p.getY()+")\n";
 		else
 			output+="PI: "+this.pi+"\n";
-		output+="PI's:\n";
-	
-		for(Pair<Vertex, Edge> p: this.pis){
-			output += "("+p.getElement0().p.getX()+","+p.getElement0().p.getY()+")"+" : "+p.getElement1()+"\n";
-		}
+		
 		return output;
 	}
 }

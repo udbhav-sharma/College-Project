@@ -1,37 +1,76 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
+import structure.Dijisktra;
+import structure.Graph;
 import structure.Point;
+import structure.Vertex;
+import util.Log;
 
 public class Main {
 	public static void main(String args[]){
 		Scanner in = new Scanner("res/nvd");
-		Point g,u,v;
+		Point g,p1,p2;
 		double x,y;
 		int k,w;
+		Vertex u,v;
+		Graph G;
+		Dijisktra dijisktra;
+		ArrayList<Vertex> borderPoints;
 		
 		while(in.hasNext()){
+			G = new Graph();
+			dijisktra = new Dijisktra();
+			borderPoints = new ArrayList<Vertex>();
+			
 			//generator g
 			x = in.nextDouble();
 			y = in.nextDouble();
 			g = new Point(x,y);
+			G.addV(g);
 			
 			k = in.nextInt();
 			while(k-->0){
 				//Edges belonging to generator g
 				x = in.nextDouble();
 				y = in.nextDouble();
-				u = new Point(x,y);
+				p1 = new Point(x,y);
 				
 				x = in.nextDouble();
 				y = in.nextDouble();
-				v = new Point(x,y);
+				p2 = new Point(x,y);
 				
 				w = in.nextInt();
+				
+				u = G.findV(p1);
+				if(u==null)
+					u = G.addV(p1);
+				
+				v = G.findV(p2);
+				if(v==null)
+					v = G.addV(p2);
+				
+				G.addE(u, v, w);
 			}
 			
-			//run Dijikstra Algorithm on graph formed above to compute distance between each border points
+			k = in.nextInt();
+			while(k-->0){
+				//Border points belonging to generator g
+				x = in.nextDouble();
+				y = in.nextDouble();
+				borderPoints.add(G.findV(new Point(x,y)));
+			}
+			
+			//Run Dijisktra Algorithm on graph formed above to compute distance between each border points
+			Log.l("-------For "+g+"------");
+			for(Vertex b1:borderPoints){
+				dijisktra.init(G,b1);
+				dijisktra.run();
+				for(Vertex b2:borderPoints){
+					Log.l(b1.p+" "+b2.p+" "+b2.dist);
+				}
+			}
 		}
-		
 		in.close();
 	}
 }

@@ -7,16 +7,20 @@ import util.Pair;
 
 public class Dijisktra {
 	
-	private PriorityQueue< Vertex > Q;
+	private PriorityQueue< Vertex > Q = null;
+	private final int sourceDist = 0;
 	
-	public Dijisktra(){
+	public Dijisktra(){}
+	
+	public void init( Graph G, Vertex s ){
 		Q=new PriorityQueue<Vertex>();
-	}
-	
-	public void init( Graph G ){
-		for(Vertex v: G.getV()){
+		
+		for(Vertex v: G.getV())
+			v.reinit();
+		s.dist = sourceDist;
+		
+		for(Vertex v: G.getV())
 			Q.add(v);
-		}
 	}
 	
 	public void run(){

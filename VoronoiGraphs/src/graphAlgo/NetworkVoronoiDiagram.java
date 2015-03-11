@@ -13,7 +13,7 @@ public class NetworkVoronoiDiagram {
 		this.nvps = new HashMap<Point, NetworkVoronoiPolygon>();
 	}
 	
-	public void add(Point p,Edge e){
+	public void addE(Point p,Edge e){
 		NetworkVoronoiPolygon nvp = this.nvps.get(p);
 		if(nvp==null){
 			nvp = new NetworkVoronoiPolygon(p);
@@ -22,6 +22,11 @@ public class NetworkVoronoiDiagram {
 		}
 		else
 			nvp.graph.add(e);
+	}
+	
+	public void addB(Point p,Point b,int w){
+		NetworkVoronoiPolygon nvp = this.nvps.get(p);
+		nvp.borderPoints.add(new Pair<Point,Integer>(b,w));
 	}
 	
 	public String toString(){

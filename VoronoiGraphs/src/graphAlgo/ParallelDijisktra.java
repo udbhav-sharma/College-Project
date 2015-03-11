@@ -12,8 +12,7 @@ public class ParallelDijisktra {
 	private PriorityQueue< Vertex > Q;
 	private NetworkVoronoiDiagram nvd = null;
 	
-	public ParallelDijisktra(){
-	}
+	public ParallelDijisktra(){}
 	
 	public void init( Graph G ){
 		Q=new PriorityQueue<Vertex>();
@@ -73,21 +72,31 @@ public class ParallelDijisktra {
 	
 	public void generateVoronoiCell(Graph G){
 		String output;
+		int isBorderPoint;
 		
 		for(Vertex v: G.getV()){
+			isBorderPoint = 0;
 			for(Pair<Point,Generator> pair : v.pis){
 				if(v.dist == pair.getElement1().dist){
-					this.nvd.add( pair.getElement0(),
+					isBorderPoint++;
+					this.nvd.addE( pair.getElement0(),
 							new NetworkVoronoiDiagram.Edge(
 									pair.getElement1().p, v.p, pair.getElement1().w, pair.getElement1().dist
 									) 
-					);		
+					);
 					output=v.p+"";
 					output+=" | ";
 					output+=pair.getElement1().p;
 					output+=" | ";
 					output+=pair.getElement0();
 					Log.l(output);
+				}
+			}
+			if(isBorderPoint>1){
+				for(Pair<Point,Generator> pair : v.pis){
+					if(v.dist == pair.getElement1().dist){
+						this.nvd.addB(pair.getElement0(), v.p, pair.getElement1().dist);
+					}
 				}
 			}
 		}

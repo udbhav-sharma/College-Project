@@ -2,8 +2,6 @@ package structure;
 
 import java.util.ArrayList;
 
-import util.Pair;
-
 public class Vertex implements Comparable<Vertex> {
 	public Point p;
 	public Vertex pi = null;

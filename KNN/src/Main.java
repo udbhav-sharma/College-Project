@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -8,8 +10,9 @@ import structure.Vertex;
 import util.Log;
 
 public class Main {
-	public static void main(String args[]){
-		Scanner in = new Scanner("res/nvd");
+	
+	public static void main(String args[]) throws FileNotFoundException{
+		Scanner in = new Scanner(new File("res/nvd"));
 		Point g,p1,p2;
 		double x,y;
 		int k,w;
@@ -23,7 +26,7 @@ public class Main {
 			dijisktra = new Dijisktra();
 			borderPoints = new ArrayList<Vertex>();
 			
-			//generator g
+			//Generator g
 			x = in.nextDouble();
 			y = in.nextDouble();
 			g = new Point(x,y);
@@ -42,6 +45,9 @@ public class Main {
 				
 				w = in.nextInt();
 				
+				if(p1.equals(p2))
+					continue;
+				
 				u = G.findV(p1);
 				if(u==null)
 					u = G.addV(p1);
@@ -58,10 +64,13 @@ public class Main {
 				//Border points belonging to generator g
 				x = in.nextDouble();
 				y = in.nextDouble();
+				w = in.nextInt();
 				borderPoints.add(G.findV(new Point(x,y)));
 			}
 			
 			//Run Dijisktra Algorithm on graph formed above to compute distance between each border points
+			//Log.d(G);
+			//Log.d(borderPoints);
 			Log.l("-------For "+g+"------");
 			for(Vertex b1:borderPoints){
 				dijisktra.init(G,b1);

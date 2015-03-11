@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 public class Vertex implements Comparable<Vertex> {
 	public Point p;
-	public Vertex pi = null;
 	public int dist = Integer.MAX_VALUE;
 	public boolean flag = false;
 	public ArrayList<Edge> adjancencies;
@@ -15,7 +14,6 @@ public class Vertex implements Comparable<Vertex> {
 	}
 	
 	public void reinit(){
-		this.pi = null;
 		this.dist = Integer.MAX_VALUE;
 		this.flag = false;
 	}
@@ -36,10 +34,7 @@ public class Vertex implements Comparable<Vertex> {
 		String output="-------\nVertex: ";
 		output+="("+this.p.getX()+","+this.p.getY()+")\n";
 		output+="Dist: "+this.dist+"\n";
-		if(this.pi!=null)
-			output+="PI: "+"("+this.pi.p.getX()+","+this.pi.p.getY()+")\n";
-		else
-			output+="PI: "+this.pi+"\n";
+		output+=adjancencies+"\n";
 		
 		return output;
 	}

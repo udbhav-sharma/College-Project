@@ -1,15 +1,19 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Scanner;
 
 import structure.Dijisktra;
+import structure.Distances;
 import structure.Graph;
 import structure.Point;
 import structure.Vertex;
 import util.Log;
 
 public class Main {
+	private static HashMap<Point, Distances> D;
 	
 	public static void main(String args[]) throws FileNotFoundException{
 		Scanner in = new Scanner(new File("res/nvd"));
@@ -20,6 +24,7 @@ public class Main {
 		Graph G;
 		Dijisktra dijisktra;
 		ArrayList<Vertex> borderPoints;
+		D = new HashMap<Point, Distances>();
 		
 		while(in.hasNext()){
 			G = new Graph();
@@ -69,17 +74,36 @@ public class Main {
 			}
 			
 			//Run Dijisktra Algorithm on graph formed above to compute distance between each border points
-			//Log.d(G);
-			//Log.d(borderPoints);
-			Log.l("-------For "+g+"------");
+			//Log.l("-------For "+g+"------");
 			for(Vertex b1:borderPoints){
 				dijisktra.init(G,b1);
 				dijisktra.run();
 				for(Vertex b2:borderPoints){
-					Log.l(b1.p+" "+b2.p+" "+b2.dist);
+					//Log.l(b1.p+" "+b2.p+" "+b2.dist);
+					addD(g,b1.p,b2.p,b2.dist);
 				}
 			}
 		}
+		
+		Iterator it = D.entrySet().iterator();
+		while(it.hasNext()){
+			HashMap.Entry<Point,Distances> pair = (HashMap.Entry<Point,Distances>)it.next();
+			Log.l("-------For "+pair.getKey()+"------");
+			Log.l(pair.getValue());
+			it.remove();
+		}
+		
 		in.close();
+	}
+	
+	private static void addD( Point g, Point p1, Point p2, int dist ){
+		Distances d  = D.get(g);
+		if(d==null){
+			d = new Distances();
+			d.addD(p1, p2, dist);
+			D.put(g, d);
+		}
+		else
+			d.addD(p1,p2,dist);
 	}
 }

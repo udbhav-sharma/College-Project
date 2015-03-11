@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import util.Pair;
+
 public class NetworkVoronoiDiagram {
 	public HashMap<Point, NetworkVoronoiPolygon> nvps;
 	
@@ -36,12 +38,12 @@ public class NetworkVoronoiDiagram {
 	public static class NetworkVoronoiPolygon{
 		public Point p = null;
 		public ArrayList<Edge> graph = null;
-		public ArrayList<Point> borderPoints = null;
+		public ArrayList<Pair<Point,Integer>> borderPoints = null;
 		
 		public NetworkVoronoiPolygon(Point p){
 			this.p = p;
 			this.graph = new ArrayList<NetworkVoronoiDiagram.Edge>();
-			this.borderPoints = new ArrayList<Point>();
+			this.borderPoints = new ArrayList<Pair<Point,Integer>>();
 		}
 		
 		public String toString(){
@@ -50,7 +52,7 @@ public class NetworkVoronoiDiagram {
 			output += "Graph: "+this.graph.size()+"\n";
 			output += this.graph+"\n";
 			output += "Border Points: "+this.borderPoints.size()+"\n";
-			output += this.borderPoints+"\n";
+			output += this.borderPoints;
 			return output;
 		}
 	}
@@ -59,15 +61,17 @@ public class NetworkVoronoiDiagram {
 		public Point p1;
 		public Point p2;
 		public int w;
+		public int dist;
 		
-		public Edge(Point p1,Point p2,int w){
+		public Edge(Point p1, Point p2, int w, int dist){
 			this.p1=p1;
 			this.p2=p2;
 			this.w=w;
+			this.dist=dist;
 		}
 		
 		public String toString(){
-			return p1+" "+p2+" "+w;
+			return "{"+p1+", "+p2+", "+w+", "+dist+"}";
 		}
 	}
 }

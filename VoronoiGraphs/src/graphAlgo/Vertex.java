@@ -6,16 +6,16 @@ import util.Pair;
 
 public class Vertex implements Comparable<Vertex> {
 	public Point p;
-	public Vertex pi = null;
+	public Point pi = null;
 	public int dist = Integer.MAX_VALUE;
 	public boolean flag = false;
 	public ArrayList<Edge> adjancencies;
-	public ArrayList<Pair<Vertex, Edge>> pis;
+	public ArrayList<Pair<Point, Generator>> pis;
 	
 	public Vertex( Point p ){
 		this.p = (Point)p.clone();
 		this.adjancencies = new ArrayList<Edge>();
-		this.pis = new ArrayList<Pair<Vertex,Edge>>();
+		this.pis = new ArrayList<Pair<Point,Generator>>();
 	}
 	
 	public void addNeighbour(Vertex v, int w){
@@ -30,15 +30,28 @@ public class Vertex implements Comparable<Vertex> {
 		String output="-------\nVertex: ";
 		output+="("+this.p.getX()+","+this.p.getY()+")\n";
 		output+="Dist: "+this.dist+"\n";
-		if(this.pi!=null)
-			output+="PI: "+"("+this.pi.p.getX()+","+this.pi.p.getY()+")\n";
-		else
-			output+="PI: "+this.pi+"\n";
+		output+="PI: "+this.pi+"\n";
 		output+="PI's:\n";
-	
-		for(Pair<Vertex, Edge> p: this.pis){
-			output += "("+p.getElement0().p.getX()+","+p.getElement0().p.getY()+")"+" : "+p.getElement1()+"\n";
+		for(Pair<Point, Generator> p: this.pis){
+			output += p.getElement0()+" : "+p.getElement1()+"\n";
 		}
+		
 		return output;
+	}
+	
+	public static class Generator{
+		Point p;
+		int w;
+		int dist;
+		
+		public Generator(Point p, int w, int dist){
+			this.p = p;
+			this.w = w;
+			this.dist = dist;
+		}
+		
+		public String toString(){
+			return "{"+p+", "+w+", "+dist+"}";
+		}
 	}
 }

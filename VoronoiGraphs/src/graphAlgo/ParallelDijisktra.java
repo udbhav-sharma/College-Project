@@ -1,5 +1,7 @@
 package graphAlgo;
 
+import graphAlgo.Vertex.Generator;
+
 import java.util.PriorityQueue;
 
 import util.Log;
@@ -11,11 +13,12 @@ public class ParallelDijisktra {
 	private NetworkVoronoiDiagram nvd = null;
 	
 	public ParallelDijisktra(){
-		Q=new PriorityQueue<Vertex>();
-		nvd=new NetworkVoronoiDiagram();
 	}
 	
 	public void init( Graph G ){
+		Q=new PriorityQueue<Vertex>();
+		nvd=new NetworkVoronoiDiagram();
+		
 		for(Vertex v: G.getV()){
 			Q.add(v);
 		}
@@ -34,7 +37,7 @@ public class ParallelDijisktra {
 					newDist = u.dist+e.w;
 					if( (newDist < e.v.dist) ||
 							(newDist == e.v.dist 
-							 && eucledianDistance( u.pi.p, e.v.p ) < eucledianDistance( e.v.pi.p, e.v.p )
+							 && eucledianDistance( u.pi, e.v.p ) < eucledianDistance( e.v.pi, e.v.p )
 							 )
 						)
 					{
@@ -44,20 +47,20 @@ public class ParallelDijisktra {
 						Q.add(e.v);
 					}
 					
-					for(Pair<Vertex,Edge> u_p : u.pis){
+					for(Pair<Point,Generator> u_p : u.pis){
 						sflag=false;
-						for(Pair<Vertex,Edge> v_p : e.v.pis){
-							if(u_p.getElement0().p.equals(v_p.getElement0().p)){
+						for(Pair<Point,Generator> v_p : e.v.pis){
+							if(u_p.getElement0().equals(v_p.getElement0())){
 								sflag=true;
-								newDist = u_p.getElement1().w + e.w;
-								if(newDist < v_p.getElement1().w){
-									v_p.setElement1(new Edge(u,newDist));
+								newDist = u_p.getElement1().dist + e.w;
+								if(newDist < v_p.getElement1().dist){
+									v_p.setElement1(new Generator(u.p,e.w,newDist));
 								}
 								break;
 							}
 						}
 						if(!sflag)
-							e.v.pis.add(new Pair<Vertex,Edge>(u_p.getElement0(),new Edge(u,newDist)));
+							e.v.pis.add(new Pair<Point,Generator>(u_p.getElement0(),new Generator(u.p,e.w,newDist)));
 					}
 				}
 			}
@@ -72,15 +75,18 @@ public class ParallelDijisktra {
 		String output;
 		
 		for(Vertex v: G.getV()){
-			for(Pair<Vertex,Edge> pair : v.pis){
-				if(v.dist == pair.getElement1().w){
-					this.nvd.add( pair.getElement0().p,
-							new NetworkVoronoiDiagram.Edge(pair.getElement1().v.p, v.p, pair.getElement1().w) );		
-					output=v.p.getX()+" "+v.p.getY();
+			for(Pair<Point,Generator> pair : v.pis){
+				if(v.dist == pair.getElement1().dist){
+					this.nvd.add( pair.getElement0(),
+							new NetworkVoronoiDiagram.Edge(
+									pair.getElement1().p, v.p, pair.getElement1().w, pair.getElement1().dist
+									) 
+					);		
+					output=v.p+"";
 					output+=" | ";
-					output+=pair.getElement1().v.p.getX()+" "+pair.getElement1().v.p.getY();
+					output+=pair.getElement1().p;
 					output+=" | ";
-					output+=pair.getElement0().p.getX()+" "+pair.getElement0().p.getY();
+					output+=pair.getElement0();
 					Log.l(output);
 				}
 			}

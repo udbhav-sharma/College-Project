@@ -6,25 +6,25 @@ import java.util.Iterator;
 import java.util.Scanner;
 
 import structure.Dijisktra;
-import structure.Distances;
+import structure.DistanceTable;
 import structure.Graph;
 import structure.Point;
 import structure.Vertex;
 import util.Log;
 
 public class Main {
-	private static HashMap<Point, Distances> D;
+	private static HashMap<Point, DistanceTable> distTable;
 	
 	public static void main(String args[]) throws FileNotFoundException{
 		Scanner in = new Scanner(new File("res/nvd"));
-		Point g,p1,p2;
+		Point p1,p2;
 		double x,y;
 		int k,w;
-		Vertex u,v;
+		Vertex g,u,v;
 		Graph G;
 		Dijisktra dijisktra;
 		ArrayList<Vertex> borderPoints;
-		D = new HashMap<Point, Distances>();
+		distTable = new HashMap<Point, DistanceTable>();
 		
 		while(in.hasNext()){
 			G = new Graph();
@@ -34,8 +34,8 @@ public class Main {
 			//Generator g
 			x = in.nextDouble();
 			y = in.nextDouble();
-			g = new Point(x,y);
-			G.addV(g);
+			p1 = new Point(x,y);
+			g = G.addV(p1);
 			
 			k = in.nextInt();
 			while(k-->0){
@@ -80,14 +80,15 @@ public class Main {
 				dijisktra.run();
 				for(Vertex b2:borderPoints){
 					//Log.l(b1.p+" "+b2.p+" "+b2.dist);
-					addD(g,b1.p,b2.p,b2.dist);
+					addD(g.p,b1.p,b2.p,b2.dist);
 				}
+				addD(g.p,b1.p,g.p,g.dist);
 			}
 		}
 		
-		Iterator it = D.entrySet().iterator();
+		Iterator it = distTable.entrySet().iterator();
 		while(it.hasNext()){
-			HashMap.Entry<Point,Distances> pair = (HashMap.Entry<Point,Distances>)it.next();
+			HashMap.Entry<Point,DistanceTable> pair = (HashMap.Entry<Point,DistanceTable>)it.next();
 			Log.l("-------For "+pair.getKey()+"------");
 			Log.l(pair.getValue());
 			it.remove();
@@ -97,11 +98,11 @@ public class Main {
 	}
 	
 	private static void addD( Point g, Point p1, Point p2, int dist ){
-		Distances d  = D.get(g);
+		DistanceTable d  = distTable.get(g);
 		if(d==null){
-			d = new Distances();
+			d = new DistanceTable();
 			d.addD(p1, p2, dist);
-			D.put(g, d);
+			distTable.put(g, d);
 		}
 		else
 			d.addD(p1,p2,dist);

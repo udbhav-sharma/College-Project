@@ -3,9 +3,9 @@ package structure;
 import java.util.HashMap;
 import java.util.Iterator;
 
-public class Distances {
+public class DistanceTable {
 	public HashMap<Point, HashMap<Point, Integer>> dist;
-	public Distances(){
+	public DistanceTable(){
 		dist = new HashMap<Point, HashMap<Point,Integer>>();
 	}
 	

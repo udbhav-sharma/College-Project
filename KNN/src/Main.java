@@ -3,12 +3,14 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.PriorityQueue;
 import java.util.Scanner;
 
 import structure.Dijisktra;
 import structure.DistanceTable;
 import structure.Graph;
 import structure.Point;
+import structure.PointOfInterest;
 import structure.Vertex;
 import util.Log;
 import util.Pair;
@@ -140,6 +142,7 @@ public class Main {
 	
 	private static void findKNN( Point q, Point nn, int K ){
 		ArrayList<Pair<Point,Integer>>  bPDTable = new ArrayList<Pair<Point,Integer>>();
+		PriorityQueue<PointOfInterest> Q = new PriorityQueue<PointOfInterest>();
 		Point POI = null;
 		int minDist;
 		
@@ -149,21 +152,35 @@ public class Main {
 			bPDTable.add(new Pair<Point, Integer>(b, minDist));
 		}
 		
-		for(int i=1;i<K;i++){
-			//select min poi as POI from all reachable with b
+		for(int i=1;i<K && Q.size()>0;i++){
+			//select minimum Point of Interest as POI from all reachable with b
+			POI = Q.poll().p;
 			
 			Log.l(POI);
 			
 			//Update new Border Points to check
+			// Add/Update distance of POI reachable now
+			boolean bPPresent;
 			for(Point b:gBPTable.get(POI)){
 				minDist = Integer.MAX_VALUE;
+				bPPresent = false;
 				for(Pair<Point,Integer> pair: bPDTable){
+					if(pair.getElement0().equals(b)){
+						bPPresent = true;
+						break;
+					}
 					try{
 						minDist = Math.min(minDist, distTable.get(POI).getDistanceTwoPoints(b, pair.getElement0()));
 					}
 					catch(Exception e){}
 				}
-				bPDTable.add(new Pair<Point, Integer>(b, minDist));
+				if(!bPPresent){
+					bPDTable.add(new Pair<Point, Integer>(b, minDist));
+					for(Point p:bPGTable.get(b)){
+						//Add distance of POI
+						Q.add(new PointOfInterest(p, minDist));
+					}
+				}
 			}
 		}
 	}

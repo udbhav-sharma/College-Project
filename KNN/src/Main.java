@@ -11,9 +11,11 @@ import structure.Graph;
 import structure.Point;
 import structure.Vertex;
 import util.Log;
+import util.Pair;
 
 public class Main {
 	private static HashMap<Point, DistanceTable> distTable;
+	private static HashMap<Point, ArrayList<Point>> gBPTable;
 	
 	public static void main(String args[]) throws FileNotFoundException{
 		Scanner in = new Scanner(new File("res/nvd"));
@@ -25,6 +27,7 @@ public class Main {
 		Dijisktra dijisktra;
 		ArrayList<Vertex> borderPoints;
 		distTable = new HashMap<Point, DistanceTable>();
+		gBPTable = new HashMap<Point, ArrayList<Point>>();
 		
 		while(in.hasNext()){
 			G = new Graph();
@@ -71,6 +74,7 @@ public class Main {
 				y = in.nextDouble();
 				w = in.nextInt();
 				borderPoints.add(G.findV(new Point(x,y)));
+				addBorderPoint(g.p,new Point(x,y));
 			}
 			
 			//Run Dijisktra Algorithm on graph formed above to compute distance between each border points
@@ -95,6 +99,7 @@ public class Main {
 		}
 		
 		in.close();
+		//findKNN(q, nn, 3);
 	}
 	
 	private static void addD( Point g, Point p1, Point p2, int dist ){
@@ -106,5 +111,48 @@ public class Main {
 		}
 		else
 			d.addD(p1,p2,dist);
+	}
+	
+	private static void addBorderPoint(Point g, Point b){
+		ArrayList<Point> list  = gBPTable.get(g);
+		if(list==null){
+			list = new ArrayList<Point>();
+			list.add(b);
+			gBPTable.put(g, list);
+		}
+		else
+			list.add(b);
+	}
+	
+	private static void findKNN( Point q, Point nn, int K ){
+		ArrayList<Pair<Point,Integer>>  bPDTable = new ArrayList<Pair<Point,Integer>>();
+		Point POI = null;
+		int minDist;
+		
+		//Add q distance with all Border Points in NN
+		for(Point b:gBPTable.get(nn)){
+			minDist = eucledianDistance(b, q);
+			bPDTable.add(new Pair<Point, Integer>(b, minDist));
+		}
+		
+		for(int i=1;i<K;i++){
+			//select min poi as POI from all reachable with b
+			
+			//Update new Border Points to check
+			for(Point b:gBPTable.get(POI)){
+				minDist = Integer.MAX_VALUE;
+				for(Pair<Point,Integer> pair: bPDTable){
+					try{
+						minDist = Math.min(minDist, distTable.get(POI).getDistanceTwoPoints(b, pair.getElement0()));
+					}
+					catch(Exception e){}
+				}
+				bPDTable.add(new Pair<Point, Integer>(b, minDist));
+			}
+		}
+	}
+	
+	private static int eucledianDistance( Point p1, Point p2 ){
+		return (int)p1.distance(p2);
 	}
 }

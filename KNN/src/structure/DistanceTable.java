@@ -20,6 +20,15 @@ public class DistanceTable {
 			list.put(p2,d);
 	}
 	
+	public int getDistanceTwoPoints(Point b1, Point b2){
+		int d = Integer.MAX_VALUE;
+		try{
+			d = dist.get(b1).get(b2);
+		}
+		catch(NullPointerException e){}
+		return d;
+	}
+	
 	public String toString(){
 		String output = "";
 		Iterator it1 = this.dist.entrySet().iterator();

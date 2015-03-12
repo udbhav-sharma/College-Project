@@ -16,6 +16,7 @@ import util.Pair;
 public class Main {
 	private static HashMap<Point, DistanceTable> distTable;
 	private static HashMap<Point, ArrayList<Point>> gBPTable;
+	private static HashMap<Point,ArrayList<Point>> bPGTable;
 	
 	public static void main(String args[]) throws FileNotFoundException{
 		Scanner in = new Scanner(new File("res/nvd"));
@@ -28,6 +29,7 @@ public class Main {
 		ArrayList<Vertex> borderPoints;
 		distTable = new HashMap<Point, DistanceTable>();
 		gBPTable = new HashMap<Point, ArrayList<Point>>();
+		bPGTable = new HashMap<Point, ArrayList<Point>>();
 		
 		while(in.hasNext()){
 			G = new Graph();
@@ -74,7 +76,7 @@ public class Main {
 				y = in.nextDouble();
 				w = in.nextInt();
 				borderPoints.add(G.findV(new Point(x,y)));
-				addBorderPoint(g.p,new Point(x,y));
+				addBPGMapping(g.p,new Point(x,y));
 			}
 			
 			//Run Dijisktra Algorithm on graph formed above to compute distance between each border points
@@ -113,7 +115,8 @@ public class Main {
 			d.addD(p1,p2,dist);
 	}
 	
-	private static void addBorderPoint(Point g, Point b){
+	private static void addBPGMapping(Point g, Point b){
+		
 		ArrayList<Point> list  = gBPTable.get(g);
 		if(list==null){
 			list = new ArrayList<Point>();
@@ -122,6 +125,17 @@ public class Main {
 		}
 		else
 			list.add(b);
+		
+		list  = bPGTable.get(g);
+		if(list==null){
+			list = new ArrayList<Point>();
+			list.add(g);
+			bPGTable.put(b, list);
+		}
+		else
+			list.add(g);
+		
+		
 	}
 	
 	private static void findKNN( Point q, Point nn, int K ){
@@ -137,6 +151,8 @@ public class Main {
 		
 		for(int i=1;i<K;i++){
 			//select min poi as POI from all reachable with b
+			
+			Log.l(POI);
 			
 			//Update new Border Points to check
 			for(Point b:gBPTable.get(POI)){

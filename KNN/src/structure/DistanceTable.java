@@ -3,6 +3,8 @@ package structure;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import util.Log;
+
 public class DistanceTable {
 	public HashMap<Point, HashMap<Point, Integer>> dist;
 	public DistanceTable(){

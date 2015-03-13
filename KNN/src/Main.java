@@ -99,11 +99,10 @@ public class Main {
 			HashMap.Entry<Point,DistanceTable> pair = (HashMap.Entry<Point,DistanceTable>)it.next();
 			Log.l("-------For "+pair.getKey()+"------");
 			Log.l(pair.getValue());
-			it.remove();
 		}
 		
 		in.close();
-		//findKNN(q, nn, 3);
+		findKNN(new Point(2,2), new Point(1,2), 3);
 	}
 	
 	private static void addD( Point g, Point p1, Point p2, int dist ){
@@ -156,7 +155,6 @@ public class Main {
 				
 				while(it.hasNext()){
 					poi = it.next();
-					it.remove();
 					if(poi.equals(g)){
 						//Update distance
 						gDist = Math.min(poi.dist,gDist);
@@ -201,7 +199,6 @@ public class Main {
 						
 						while(it.hasNext()){
 							poi = it.next();
-							it.remove();
 							if(poi.equals(g)){
 								//Update distance
 								gDist = Math.min(poi.dist,gDist);

@@ -136,19 +136,37 @@ public class Main {
 		}
 		else
 			list.add(g);
-		
-		
 	}
 	
 	private static void findKNN( Point q, Point nn, int K ){
 		ArrayList<Pair<Point,Integer>>  bPDTable = new ArrayList<Pair<Point,Integer>>();
 		PriorityQueue<PointOfInterest> Q = new PriorityQueue<PointOfInterest>();
 		Point POI = null;
-		int minDist;
+		PointOfInterest poi;
+		int minDist,gDist;
+		Iterator<PointOfInterest> it = null;
 		
 		//Add q distance with all Border Points in NN
 		for(Point b:gBPTable.get(nn)){
 			minDist = eucledianDistance(b, q);
+			
+			for(Point g:bPGTable.get(b)){
+				it = Q.iterator();
+				gDist = minDist+distTable.get(g).getDistanceTwoPoints(b, g);
+				
+				while(it.hasNext()){
+					poi = it.next();
+					it.remove();
+					if(poi.equals(g)){
+						//Update distance
+						gDist = Math.min(poi.dist,gDist);
+						Q.remove(poi);
+						break;
+					}
+				}
+				Q.add(new PointOfInterest(g, gDist));
+			}
+			
 			bPDTable.add(new Pair<Point, Integer>(b, minDist));
 		}
 		
@@ -176,9 +194,22 @@ public class Main {
 				}
 				if(!bPPresent){
 					bPDTable.add(new Pair<Point, Integer>(b, minDist));
-					for(Point p:bPGTable.get(b)){
-						//Add distance of POI
-						Q.add(new PointOfInterest(p, minDist));
+					
+					for(Point g:bPGTable.get(b)){
+						it = Q.iterator();
+						gDist = minDist+distTable.get(g).getDistanceTwoPoints(b, g);
+						
+						while(it.hasNext()){
+							poi = it.next();
+							it.remove();
+							if(poi.equals(g)){
+								//Update distance
+								gDist = Math.min(poi.dist,gDist);
+								Q.remove(poi);
+								break;
+							}
+						}
+						Q.add(new PointOfInterest(g, gDist));
 					}
 				}
 			}

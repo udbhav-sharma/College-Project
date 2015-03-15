@@ -30,3 +30,4 @@ public class Point extends java.awt.Point implements Serializable {
         return ("(" + x + "," + y + ")"); 
     }
 }
+

@@ -34,12 +34,7 @@ public class ParallelDijisktra {
 			for(Edge e:u.adjancencies){
 				if(!e.v.flag){
 					newDist = u.dist+e.w;
-					if( (newDist < e.v.dist) ||
-							(newDist == e.v.dist 
-							 && eucledianDistance( u.pi, e.v.p ) < eucledianDistance( e.v.pi, e.v.p )
-							 )
-						)
-					{
+					if( (newDist < e.v.dist)){
 						Q.remove(e.v);
 						e.v.dist=newDist;
 						e.v.pi = u.pi;
@@ -48,17 +43,18 @@ public class ParallelDijisktra {
 					
 					for(Pair<Point,Generator> u_p : u.pis){
 						sflag=false;
+						newDist = u_p.getElement1().dist + e.w;
+						
 						for(Pair<Point,Generator> v_p : e.v.pis){
 							if(u_p.getElement0().equals(v_p.getElement0())){
 								sflag=true;
-								newDist = u_p.getElement1().dist + e.w;
 								if(newDist < v_p.getElement1().dist){
 									v_p.setElement1(new Generator(u.p,e.w,newDist));
 								}
 								break;
 							}
 						}
-						if(!sflag)
+						if(!sflag && newDist <= e.v.dist)
 							e.v.pis.add(new Pair<Point,Generator>(u_p.getElement0(),new Generator(u.p,e.w,newDist)));
 					}
 				}

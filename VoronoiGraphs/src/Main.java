@@ -16,7 +16,7 @@ public class Main {
 		int i,j,x,y,w;
 		Scanner in;
 		
-		in = new Scanner(new File("res/pointofinterests"));
+		in = new Scanner(new File("res/pointofinterests2"));
 		while(in.hasNextInt()){
 			x = in.nextInt();
 			y = in.nextInt();
@@ -24,7 +24,7 @@ public class Main {
 		}
 		in.close();
 		
-		in = new Scanner(new File("res/roads"));
+		in = new Scanner(new File("res/roads2"));
 		while(in.hasNextInt()){
 			i = in.nextInt();
 			j = in.nextInt();

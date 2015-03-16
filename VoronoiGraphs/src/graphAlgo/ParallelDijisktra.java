@@ -78,8 +78,6 @@ public class ParallelDijisktra {
 					);
 					output=v.p+"";
 					output+=" | ";
-					output+=pair.getElement1().p;
-					output+=" | ";
 					output+=pair.getElement0();
 					Log.l(output);
 				}

@@ -19,8 +19,10 @@ public class Graph {
 	}
 	
 	public void addE(Vertex u, Vertex v, int w){
-		if(u!=null && v!=null)
+		if(u!=null && v!=null){
 			u.addNeighbour(v,w);
+			v.addNeighbour(u, w);
+		}
 	}
 	
 	public ArrayList< Vertex > getV(){

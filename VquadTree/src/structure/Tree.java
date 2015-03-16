@@ -1,7 +1,8 @@
 package structure;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import structure.Point;
 import structure.Rectangle;
@@ -16,13 +17,13 @@ public class Tree {
 		root=new Node();
 	}
 	
-	public Node init (Rectangle r, ArrayList< Pair<Point, ArrayList<Point>>> points){
+	public Node init (Rectangle r, HashMap< Point, ArrayList<Point>> points){
 		this.root = formTree(r,points);
 		
 		return this.root;
 	}
 	
-	public Node formTree( Rectangle r, ArrayList< Pair<Point, ArrayList<Point>>> points ){
+	public Node formTree( Rectangle r, HashMap< Point, ArrayList<Point>> points ){
 		Node newNode = new Node();
 		boolean split = false;
 		ArrayList<Point> lastPOI = null;
@@ -30,9 +31,12 @@ public class Tree {
 		newNode.setR(r);
 		
 		if(points.size()>0){
-			lastPOI = points.get(0).getElement1();
-			for(Pair<Point,ArrayList<Point>> pair:points){
-				lastPOI = intersect(lastPOI,pair.getElement1());
+			Iterator it = points.entrySet().iterator();
+			HashMap.Entry<Point,ArrayList<Point>> pair = (HashMap.Entry<Point,ArrayList<Point>>)it.next();
+			lastPOI = pair.getValue();
+			while(it.hasNext()){
+				pair = (HashMap.Entry<Point,ArrayList<Point>>)it.next();
+				lastPOI = intersect(lastPOI,pair.getValue());
 				if(lastPOI.size()==0)
 					split = true;
 			}
@@ -51,24 +55,24 @@ public class Tree {
 			//Log.d(newNode);
 			double newX = r.getX();
 			double newY = r.getY();
-			double newW = r.getWidth();
-			double newH = r.getHeight();
+			double newW = r.getWidth()/2;
+			double newH = r.getHeight()/2;
 			Rectangle newRectangle;
 			
 			newRectangle = new Rectangle();
-			newRectangle.setRect(newX,newY,newW/2,newH/2);
+			newRectangle.setRect(newX,newY,newW,newH);
 			newNode.children.add(formTree(newRectangle, filterPoints(points,newRectangle)));
 
 			newRectangle = new Rectangle();
-			newRectangle.setRect(newX+newW/2,newY,newW/2,newH/2);
+			newRectangle.setRect(newX+newW,newY,newW,newH);
 			newNode.children.add(formTree(newRectangle, filterPoints(points,newRectangle)));
 
 			newRectangle = new Rectangle();
-			newRectangle.setRect(newX,newY-newH/2,newW/2,newH/2);
+			newRectangle.setRect(newX,newY-newH,newW,newH);
 			newNode.children.add(formTree(newRectangle, filterPoints(points,newRectangle)));
 
 			newRectangle = new Rectangle();
-			newRectangle.setRect(newX+newW/2,newY-newH/2,newW/2,newH/2);
+			newRectangle.setRect(newX+newW,newY-newH,newW,newH);
 			newNode.children.add(formTree(newRectangle, filterPoints(points,newRectangle)));
 		}
 		
@@ -76,7 +80,7 @@ public class Tree {
 	}
 	
 	public Pair<Point,Double> getGenerator(Point p){
-		HashSet<Pair<Point,Double>> result = new HashSet<Pair<Point,Double>>();
+		ArrayList<Pair<Point,Double>> result = new ArrayList<Pair<Point,Double>>();
 		this.get1NN(this.root,p,result);
 		
 		Pair<Point,Double> minPair = null;
@@ -113,19 +117,21 @@ public class Tree {
 		return newList;
 	}
 	
-	private ArrayList<Pair<Point, ArrayList<Point>>> filterPoints(ArrayList<Pair<Point,ArrayList<Point>>> points, Rectangle r){
-		ArrayList<Pair<Point, ArrayList<Point>>> newPoints=new ArrayList<Pair<Point,ArrayList<Point>>>();
+	private HashMap<Point, ArrayList<Point>> filterPoints(HashMap<Point,ArrayList<Point>> points, Rectangle r){
+		HashMap<Point, ArrayList<Point>> newPoints=new HashMap<Point,ArrayList<Point>>();
 		
-		for(Pair<Point,ArrayList<Point>> pair:points){
-			if(r.contains( pair.getElement0())){
-				newPoints.add(pair);
+		Iterator it = points.entrySet().iterator();
+		while(it.hasNext()){
+			HashMap.Entry<Point,ArrayList<Point>> pair = (HashMap.Entry<Point,ArrayList<Point>>)it.next();
+			if(r.contains( pair.getKey())){
+				newPoints.put(pair.getKey(),pair.getValue());
 			}
 		}
 		
 		return newPoints;
 	}
 	
-	private void get1NN(Node node, Point p, HashSet<Pair<Point,Double>> result){
+	private void get1NN(Node node, Point p, ArrayList<Pair<Point,Double>> result){
 		if(node.r.contains(p)){
 			if(node.isLeaf){
 				boolean isPresent = false;

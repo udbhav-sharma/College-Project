@@ -62,10 +62,6 @@ public class ParallelDijisktra {
 		}
 	}
 	
-	private double eucledianDistance( Point p1, Point p2 ){
-		return p1.distance(p2);
-	}
-	
 	public void generateVoronoiCell(Graph G){
 		String output;
 		int isBorderPoint;

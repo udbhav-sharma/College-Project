@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Vertex implements Comparable<Vertex> {
 	public Point p;
-	public int dist = Integer.MAX_VALUE;
+	public double dist = Double.MAX_VALUE;
 	public boolean flag = false;
 	public ArrayList<Edge> adjancencies;
 	
@@ -18,7 +18,7 @@ public class Vertex implements Comparable<Vertex> {
 		this.flag = false;
 	}
 	
-	public void addNeighbour(Vertex v, int w){
+	public void addNeighbour(Vertex v, double w){
 		this.adjancencies.add(new Edge(v,w));
 	}
 	
@@ -27,7 +27,7 @@ public class Vertex implements Comparable<Vertex> {
 	}
 	
 	public int compareTo(Vertex other){
-		return Integer.compare(dist, other.dist);
+		return Double.compare(dist, other.dist);
 	}
 	
 	public String toString(){

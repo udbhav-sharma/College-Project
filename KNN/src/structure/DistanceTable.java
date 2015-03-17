@@ -6,15 +6,15 @@ import java.util.Iterator;
 import util.Log;
 
 public class DistanceTable {
-	public HashMap<Point, HashMap<Point, Integer>> dist;
+	public HashMap<Point, HashMap<Point, Double>> dist;
 	public DistanceTable(){
-		dist = new HashMap<Point, HashMap<Point,Integer>>();
+		dist = new HashMap<Point, HashMap<Point,Double>>();
 	}
 	
-	public void addD(Point p1, Point p2, Integer d){
-		HashMap<Point,Integer> list = dist.get(p1);
+	public void addD(Point p1, Point p2, double d){
+		HashMap<Point,Double> list = dist.get(p1);
 		if(list==null){
-			list = new HashMap<Point, Integer>();
+			list = new HashMap<Point, Double>();
 			list.put(p2, d);
 			dist.put(p1, list);
 		}
@@ -22,12 +22,14 @@ public class DistanceTable {
 			list.put(p2,d);
 	}
 	
-	public int getDistanceTwoPoints(Point b1, Point b2){
-		int d = Integer.MAX_VALUE;
+	public double getDistanceTwoPoints(Point b1, Point b2){
+		double d = Double.MAX_VALUE;
 		try{
 			d = dist.get(b1).get(b2);
 		}
-		catch(NullPointerException e){}
+		catch(NullPointerException e){
+			//Log.e("No distance between "+b1+" "+b2);
+		}
 		return d;
 	}
 	
@@ -43,10 +45,7 @@ public class DistanceTable {
 				output += pair1.getKey()+", ";
 				output += pair2.getKey()+", ";
 				output += pair2.getValue()+"\n";
-				it2.remove();
 			}
-			
-			it1.remove(); // avoids a ConcurrentModificationException
 		}
 		return output;
 	}

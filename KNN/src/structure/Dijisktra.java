@@ -24,7 +24,7 @@ public class Dijisktra {
 	}
 	
 	public void run(){
-		int newDist;
+		double newDist;
 		
 		while(!this.Q.isEmpty()){
 			Vertex u = this.Q.poll();

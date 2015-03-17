@@ -15,9 +15,11 @@ public class Graph {
 		return this.V.get(this.V.size()-1);
 	}
 	
-	public void addE(Vertex u, Vertex v, int w){
-		if(u!=null && v!=null)
+	public void addE(Vertex u, Vertex v, double w){
+		if(u!=null && v!=null){
 			u.addNeighbour(v,w);
+			v.addNeighbour(u,w);
+		}
 	}
 	
 	public ArrayList< Vertex > getV(){

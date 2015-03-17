@@ -2,13 +2,14 @@ package structure;
 
 public class PointOfInterest implements Comparable<PointOfInterest> {
 	public Point p;
-	public int dist = 0;
+	public double dist = Double.MAX_VALUE;
+	public boolean popped = false;
 	
 	public PointOfInterest(Point p){
 		this.p = p;
 	}
 	
-	public PointOfInterest(Point p, int dist) {
+	public PointOfInterest(Point p, double dist) {
 		this.p = p;
 		this.dist = dist;
 	}
@@ -18,7 +19,7 @@ public class PointOfInterest implements Comparable<PointOfInterest> {
 	}
 	
 	public int compareTo(PointOfInterest other){
-		return Integer.compare(dist, other.dist);
+		return Double.compare(dist, other.dist);
 	}
 	
 	public String toString(){

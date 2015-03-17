@@ -26,8 +26,8 @@ public class Point extends java.awt.Point implements Serializable {
         return y;
     }
     
-    public boolean equals(Point p){
-    	return (this.x==p.getX() && this.y==p.getY());
+    public boolean equals(Object p){
+    	return (this.x==((Point)p).getX() && this.y==((Point)p).getY());
     }
 
     @Override

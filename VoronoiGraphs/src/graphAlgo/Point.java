@@ -7,7 +7,7 @@ public class Point extends java.awt.Point implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private final double x;
     private final double y;
-
+    
     public Point(double x, double y) {
         this.x = x;
         this.y = y;
@@ -23,6 +23,10 @@ public class Point extends java.awt.Point implements Serializable {
     
     public boolean equals(Point p){
     	return (this.x==p.getX() && this.y==p.getY());
+    }
+    
+    public boolean isNull(){
+    	return (x==-1 || y==-1);
     }
 
     @Override

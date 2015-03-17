@@ -30,6 +30,10 @@ public class Pair<K, V> {
     	this.element1 = element1;
     }
     
+    public boolean equals( Pair<K,V> pair ){
+    	return element0.equals(pair.getElement0()) && element1.equals(pair.getElement1());
+    }
+    
     public String toString(){
     	return "{"+this.element0+", "+this.element1+"}";
     }

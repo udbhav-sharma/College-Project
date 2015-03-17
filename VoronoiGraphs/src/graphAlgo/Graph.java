@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Graph {
 
-	private ArrayList< Vertex > V;
+	private ArrayList<Vertex > V;
 	
 	public Graph(){
 		V=new ArrayList<Vertex>();
@@ -30,19 +30,17 @@ public class Graph {
 	}
 	
 	public Vertex findV( Point p ){
-		Vertex u=null;
-		for(Vertex v:this.V){
-			if(p.equals(v.p)){
-				u=v;
-			}
+		Vertex v = null;
+		for(Vertex u:this.V){
+			if(u.p.equals(p))
+				v=u;
 		}
-		return u;
+		return v;
 	}
 	
 	public String toString(){
 		String output="----Graph----\n";
-		for(Vertex v:this.V)
-			output+=v.toString();
+		output+=V;
 		return output;
 	}
 }

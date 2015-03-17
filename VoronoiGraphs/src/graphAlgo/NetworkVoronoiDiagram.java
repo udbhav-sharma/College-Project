@@ -24,9 +24,15 @@ public class NetworkVoronoiDiagram {
 			nvp.graph.add(e);
 	}
 	
-	public void addB(Point p,Point b,int w){
+	public void addB(Point p, Point b, double w){
 		NetworkVoronoiPolygon nvp = this.nvps.get(p);
-		nvp.borderPoints.add(new Pair<Point,Integer>(b,w));
+		if(nvp==null){
+			nvp = new NetworkVoronoiPolygon(p);
+			nvp.borderPoints.add(new Pair<Point,Double>(b,w));
+			this.nvps.put(p, nvp);
+		}
+		else
+			nvp.borderPoints.add(new Pair<Point,Double>(b,w));
 	}
 	
 	public String toString(){
@@ -35,7 +41,6 @@ public class NetworkVoronoiDiagram {
 		while(it.hasNext()){
 			HashMap.Entry<Point,ArrayList<Point>> pair = (HashMap.Entry<Point,ArrayList<Point>>)it.next();
 			output+= pair.getValue()+"\n";
-			it.remove(); // avoids a ConcurrentModificationException
 		}
 		return output;
 	}
@@ -43,12 +48,12 @@ public class NetworkVoronoiDiagram {
 	public static class NetworkVoronoiPolygon{
 		public Point p = null;
 		public ArrayList<Edge> graph = null;
-		public ArrayList<Pair<Point,Integer>> borderPoints = null;
+		public ArrayList<Pair<Point,Double>> borderPoints = null;
 		
 		public NetworkVoronoiPolygon(Point p){
 			this.p = p;
 			this.graph = new ArrayList<NetworkVoronoiDiagram.Edge>();
-			this.borderPoints = new ArrayList<Pair<Point,Integer>>();
+			this.borderPoints = new ArrayList<Pair<Point,Double>>();
 		}
 		
 		public String toString(){
@@ -65,18 +70,16 @@ public class NetworkVoronoiDiagram {
 	public static class Edge{
 		public Point p1;
 		public Point p2;
-		public int w;
-		public int dist;
+		public double w;
 		
-		public Edge(Point p1, Point p2, int w, int dist){
+		public Edge(Point p1, Point p2, double w){
 			this.p1=p1;
 			this.p2=p2;
 			this.w=w;
-			this.dist=dist;
 		}
 		
 		public String toString(){
-			return "{"+p1+", "+p2+", "+w+", "+dist+"}";
+			return "{"+p1+", "+p2+", "+w+"}";
 		}
 	}
 }

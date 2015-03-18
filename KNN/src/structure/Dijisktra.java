@@ -2,9 +2,6 @@ package structure;
 
 import java.util.PriorityQueue;
 
-import util.Log;
-import util.Pair;
-
 public class Dijisktra {
 	
 	private PriorityQueue< Vertex > Q = null;

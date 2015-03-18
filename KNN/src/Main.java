@@ -96,10 +96,13 @@ public class Main {
 			}
 		}
 		
-		Log.d(distTable);
-		
+		//Log.d(distTable);
 		in.close();
-		//findKNN(new Point(1,1), new Point(2,4), 3, pointOfInterests);
+		findKNN(new Point(1,1), new Point(2,4), 3, pointOfInterests);
+		findKNN(new Point(1,3), new Point(2,4), 3, pointOfInterests);
+		findKNN(new Point(2,5), new Point(2,4), 3, pointOfInterests);
+		findKNN(new Point(4,6), new Point(4,7), 3, pointOfInterests);
+		findKNN(new Point(2,4), new Point(2,4), 3, pointOfInterests);
 	}
 	
 	private static void addD( Point g, Point p1, Point p2, double dist ){
@@ -145,6 +148,8 @@ public class Main {
 		for(PointOfInterest tempPOI: pointOfInterests){
 			if(tempPOI.p.equals(nn))
 				tempPOI.dist=0;
+			else
+				tempPOI.dist = Double.MAX_VALUE;
 			Q.add(tempPOI);
 		}
 		
@@ -154,7 +159,6 @@ public class Main {
 			for(Point g:bPGTable.get(b)){
 				it = Q.iterator();
 				gDist = minDist+distTable.get(g).getDistanceTwoPoints(b, g);
-				Log.d(b+", "+g+", "+gDist);
 				while(it.hasNext()){
 					poi = it.next();
 					if(poi.p.equals(g)){
@@ -167,22 +171,44 @@ public class Main {
 			}
 			bPDTable.add(new Pair<Point, Double>(b, minDist));
 		}
+		
+		/*Log.d("----------bPDTable--------");
+		Log.d(bPDTable);
+		
+		Log.d("");
+		Log.d("----------Q----------");
 		Log.d(Q);
+		Log.d("");*/
 		
 		poppedPOI = Q.poll();
 		poppedPOI.popped=true;
 		Log.l(poppedPOI.p);
+		
+		/*Log.d("----------bPDTable--------");
+		Log.d(bPDTable);
+		
+		Log.d("");
+		Log.d("----------Q----------");
+		Log.d(Q);
+		Log.d("");*/
 	
 		for(int i=1;i<K && Q.size()>0;i++){
 			poppedPOI = Q.poll();
 			poppedPOI.popped=true;
 			
 			Log.l(poppedPOI.p);
+			
+			/*Log.d("----------bPDTable--------");
+			Log.d(bPDTable);
+			
+			Log.d("");
+			Log.d("----------Q----------");
 			Log.d(Q);
+			Log.d("");*/
 			
 			boolean bPPresent;
 			for(Point b:gBPTable.get(poppedPOI.p)){
-				minDist = Integer.MAX_VALUE;
+				minDist = Double.MAX_VALUE;
 				bPPresent = false;
 				for(Pair<Point,Double> pair: bPDTable){
 					if(pair.getElement0().equals(b)){
@@ -190,7 +216,7 @@ public class Main {
 						break;
 					}
 					try{
-						minDist = Math.min(minDist, distTable.get(poppedPOI.p).getDistanceTwoPoints(b, pair.getElement0()));
+						minDist = Math.min(minDist, distTable.get(poppedPOI.p).getDistanceTwoPoints(b, pair.getElement0())+pair.getElement1());
 					}
 					catch(Exception e){}
 				}
@@ -214,6 +240,7 @@ public class Main {
 				}
 			}
 		}
+		Log.l("-------");
 	}
 	
 	private static int eucledianDistance( Point p1, Point p2 ){

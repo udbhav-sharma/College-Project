@@ -37,9 +37,9 @@ public class NetworkVoronoiDiagram {
 	
 	public String toString(){
 		String output="--------Network Voronoi Diagram-------\n";
-		Iterator it = this.nvps.entrySet().iterator();
+		Iterator<HashMap.Entry<Point,NetworkVoronoiPolygon>> it = this.nvps.entrySet().iterator();
 		while(it.hasNext()){
-			HashMap.Entry<Point,ArrayList<Point>> pair = (HashMap.Entry<Point,ArrayList<Point>>)it.next();
+			HashMap.Entry<Point,NetworkVoronoiPolygon> pair = it.next();
 			output+= pair.getValue()+"\n";
 		}
 		return output;

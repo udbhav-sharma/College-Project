@@ -45,9 +45,9 @@ public class ParallelDijisktra {
 						Q.add(e.v);
 					}
 					
-					Iterator it = u.pis.entrySet().iterator(); 
+					Iterator<HashMap.Entry<Point,Generator>> it = u.pis.entrySet().iterator(); 
 					while(it.hasNext()){
-						HashMap.Entry<Point,Generator> u_p = (HashMap.Entry<Point,Generator>)it.next();
+						HashMap.Entry<Point,Generator> u_p = it.next();
 						newDist = u_p.getValue().dist + e.w;
 						
 						Generator v_g = e.v.pis.get(u_p.getKey());
@@ -104,9 +104,9 @@ public class ParallelDijisktra {
 		for(Vertex v: this.G.getV()){
 			//Fetching Border Points
 			if(v.pis.size()>1){
-				Iterator it = v.pis.entrySet().iterator(); 
+				Iterator<HashMap.Entry<Point,Generator>> it = v.pis.entrySet().iterator(); 
 				while(it.hasNext()){
-					HashMap.Entry<Point,Generator> pair = (HashMap.Entry<Point,Generator>)it.next();
+					HashMap.Entry<Point,Generator> pair = it.next();
 					this.nvd.addB(pair.getKey(), v.p, pair.getValue().dist);
 					output=v.p+"";
 					output+=" | ";
@@ -130,9 +130,9 @@ public class ParallelDijisktra {
 	
 	private void updatePOI(){
 		for(Vertex v: this.G.getV()){
-			Iterator it = v.pis.entrySet().iterator(); 
+			Iterator<HashMap.Entry<Point,Generator>> it = v.pis.entrySet().iterator(); 
 			while(it.hasNext()){
-				HashMap.Entry<Point,Generator> pair = (HashMap.Entry<Point,Generator>)it.next();
+				HashMap.Entry<Point,Generator> pair = it.next();
 				if(v.dist == pair.getValue().dist){}
 				else it.remove();
 			}
@@ -142,9 +142,9 @@ public class ParallelDijisktra {
 	private ArrayList<Point> intersect( Vertex u, Vertex v ){
 		ArrayList<Point> intersection = new ArrayList<Point>();
 		
-		Iterator it = u.pis.entrySet().iterator(); 
+		Iterator<HashMap.Entry<Point,Generator>> it = u.pis.entrySet().iterator(); 
 		while(it.hasNext()){
-			HashMap.Entry<Point,Generator> pair = (HashMap.Entry<Point,Generator>)it.next();
+			HashMap.Entry<Point,Generator> pair = it.next();
 			if(v.pis.containsKey(pair.getKey()))
 				intersection.add(pair.getKey());
 		}
@@ -157,9 +157,9 @@ public class ParallelDijisktra {
 
 		newPOI.putAll(u.pis);
 		
-		Iterator it = v.pis.entrySet().iterator(); 
+		Iterator<HashMap.Entry<Point,Generator>> it = v.pis.entrySet().iterator(); 
 		while(it.hasNext()){
-			HashMap.Entry<Point,Generator> pair = (HashMap.Entry<Point,Generator>)it.next();
+			HashMap.Entry<Point,Generator> pair = it.next();
 			if(!newPOI.containsKey(pair.getKey()))
 				newPOI.put(pair.getKey(),pair.getValue());
 		}
@@ -172,18 +172,18 @@ public class ParallelDijisktra {
 			return false;
 		
 		if(u.pis.size()<=v.pis.size()){
-			Iterator it = u.pis.entrySet().iterator(); 
+			Iterator<HashMap.Entry<Point,Generator>> it = u.pis.entrySet().iterator(); 
 			while(it.hasNext()){
-				HashMap.Entry<Point,Generator> pair = (HashMap.Entry<Point,Generator>)it.next();
+				HashMap.Entry<Point,Generator> pair = it.next();
 				if(!v.pis.containsKey(pair.getKey()))
 					return true;
 			}
 			return false;
 		}
 		else{
-			Iterator it = v.pis.entrySet().iterator(); 
+			Iterator<HashMap.Entry<Point,Generator>> it = v.pis.entrySet().iterator(); 
 			while(it.hasNext()){
-				HashMap.Entry<Point,Generator> pair = (HashMap.Entry<Point,Generator>)it.next();
+				HashMap.Entry<Point,Generator> pair = it.next();
 				if(!u.pis.containsKey(pair.getKey()))
 					return true;
 			}

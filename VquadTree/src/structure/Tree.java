@@ -6,7 +6,6 @@ import java.util.Iterator;
 
 import structure.Point;
 import structure.Rectangle;
-import util.Log;
 import util.Pair;
 
 public class Tree {
@@ -31,11 +30,11 @@ public class Tree {
 		newNode.setR(r);
 		
 		if(points.size()>0){
-			Iterator it = points.entrySet().iterator();
-			HashMap.Entry<Point,ArrayList<Point>> pair = (HashMap.Entry<Point,ArrayList<Point>>)it.next();
+			Iterator<HashMap.Entry<Point,ArrayList<Point>>> it = points.entrySet().iterator();
+			HashMap.Entry<Point,ArrayList<Point>> pair = it.next();
 			lastPOI = pair.getValue();
 			while(it.hasNext()){
-				pair = (HashMap.Entry<Point,ArrayList<Point>>)it.next();
+				pair = it.next();
 				lastPOI = intersect(lastPOI,pair.getValue());
 				if(lastPOI.size()==0)
 					split = true;
@@ -120,9 +119,9 @@ public class Tree {
 	private HashMap<Point, ArrayList<Point>> filterPoints(HashMap<Point,ArrayList<Point>> points, Rectangle r){
 		HashMap<Point, ArrayList<Point>> newPoints=new HashMap<Point,ArrayList<Point>>();
 		
-		Iterator it = points.entrySet().iterator();
+		Iterator<HashMap.Entry<Point,ArrayList<Point>>> it = points.entrySet().iterator();
 		while(it.hasNext()){
-			HashMap.Entry<Point,ArrayList<Point>> pair = (HashMap.Entry<Point,ArrayList<Point>>)it.next();
+			HashMap.Entry<Point,ArrayList<Point>> pair = it.next();
 			if(r.contains( pair.getKey())){
 				newPoints.put(pair.getKey(),pair.getValue());
 			}

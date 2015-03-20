@@ -3,8 +3,6 @@ package structure;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import util.Log;
-
 public class DistanceTable {
 	public HashMap<Point, HashMap<Point, Double>> dist;
 	public DistanceTable(){
@@ -35,13 +33,13 @@ public class DistanceTable {
 	
 	public String toString(){
 		String output = "";
-		Iterator it1 = this.dist.entrySet().iterator();
+		Iterator< HashMap.Entry<Point,HashMap<Point,Double>> > it1 = this.dist.entrySet().iterator();
 		while(it1.hasNext()){
-			HashMap.Entry<Point,HashMap<Point,Integer>> pair1 = (HashMap.Entry<Point,HashMap<Point,Integer>>)it1.next();
+			HashMap.Entry<Point,HashMap<Point,Double>> pair1 = it1.next();
 			
-			Iterator it2 = pair1.getValue().entrySet().iterator();
+			Iterator<HashMap.Entry<Point,Double>> it2 = pair1.getValue().entrySet().iterator();
 			while(it2.hasNext()){
-				HashMap.Entry<Point,Integer> pair2 = (HashMap.Entry<Point,Integer>)it2.next();
+				HashMap.Entry<Point,Double> pair2 = it2.next();
 				output += pair1.getKey()+", ";
 				output += pair2.getKey()+", ";
 				output += pair2.getValue()+"\n";

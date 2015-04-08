@@ -1,12 +1,12 @@
-package structure;
+package vquadTreeStructure;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import structure.Rectangle;
 import util.Pair;
 import util.Point;
+import vquadTreeStructure.Rectangle;
 
 public class Tree {
 	

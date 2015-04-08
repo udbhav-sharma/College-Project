@@ -1,4 +1,4 @@
-package structure;
+package vquadTreeStructure;
 
 import java.util.ArrayList;
 

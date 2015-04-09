@@ -8,8 +8,10 @@ import java.util.PriorityQueue;
 import java.util.Scanner;
 
 import graphAlgo.Graph;
+import graphAlgo.NetworkVoronoiDiagram;
 import graphAlgo.Vertex;
 import graphAlgo.ParallelDijisktra;
+import graphAlgo.NetworkVoronoiDiagram.NetworkVoronoiPolygon;
 import graphAlgo.Vertex.Generator;
 import knnQueryStructure.DistanceTable;
 import knnQueryStructure.PointOfInterest;
@@ -39,8 +41,10 @@ public class Main {
 		 * Voronoi Graphs
 		 * */
 		Graph G = new Graph();
-		int i,j,x,y,w;
+		int i,j,x,y;
+		double w;
 		Scanner in;
+		NetworkVoronoiDiagram nvd = null;
 		
 		in = new Scanner(new File("res/pointofinterests2"));
 		while(in.hasNextInt()){
@@ -67,13 +71,14 @@ public class Main {
 				v = G.addV(new Point(x,y),false);
 			
 			w = in.nextInt();
-			G.addE(u,v,w);
+			G.addE(u,v,(int)w);
 		}
 		in.close();
 		
 		ParallelDijisktra parallelDijisktra = new ParallelDijisktra();
 		parallelDijisktra.init(G);
 		parallelDijisktra.generateVoronoi();
+		nvd = parallelDijisktra.getNVD();
 		
 		/* 
 		 * VQuad Tree 
@@ -123,75 +128,62 @@ public class Main {
 		/*
 		 * kNN query
 		 * */
-		
-		/*Point p1,p2;
-		double x,y;
+		Point p1,p2;
 		int k;
-		double w;
-		Vertex g,u,v;
-		Graph G;
+		knnQueryStructure.Vertex g,u,v;
+		knnQueryStructure.Graph kNNG;
 		Dijisktra dijisktra;
-		ArrayList<Vertex> borderPoints;
-		ArrayList<PointOfInterest> pointOfInterests = new ArrayList<PointOfInterest>();
+		ArrayList<knnQueryStructure.Vertex> borderPoints;
+		ArrayList<knnQueryStructure.PointOfInterest> pointOfInterests = new ArrayList<knnQueryStructure.PointOfInterest>();
 		
 		distTable = new HashMap<Point, DistanceTable>();
 		gBPTable = new HashMap<Point, ArrayList<Point>>();
 		bPGTable = new HashMap<Point, ArrayList<Point>>();
 		
-		while(in.hasNext()){
-			G = new Graph();
+		Iterator<HashMap.Entry<Point,NetworkVoronoiPolygon>> it = nvd.nvps.entrySet().iterator();
+		while(it.hasNext()){
+			HashMap.Entry<Point,NetworkVoronoiPolygon> nvpPair = it.next();
+			
+			kNNG = new knnQueryStructure.Graph();
 			dijisktra = new Dijisktra();
-			borderPoints = new ArrayList<Vertex>();
+			borderPoints = new ArrayList<knnQueryStructure.Vertex>();
 			
 			//Generator g
-			x = in.nextDouble();
-			y = in.nextDouble();
-			p1 = new Point(x,y);
-			g = G.addV(p1);
-			pointOfInterests.add(new PointOfInterest(p1));
+			p1 = new Point(nvpPair.getKey());
+			g = kNNG.addV(p1);
+			pointOfInterests.add(new knnQueryStructure.PointOfInterest(p1));
 			
-			k = in.nextInt();
-			while(k-->0){
+			for(graphAlgo.NetworkVoronoiDiagram.Edge edge : nvpPair.getValue().graph){
 				//Edges belonging to generator g
-				x = in.nextDouble();
-				y = in.nextDouble();
-				p1 = new Point(x,y);
-				
-				x = in.nextDouble();
-				y = in.nextDouble();
-				p2 = new Point(x,y);
-				
-				w = in.nextDouble();
+				p1 = new Point(edge.p1);
+				p2 = new Point(edge.p2);
+				w = edge.w;
 				
 				if(p1.equals(p2))
 					continue;
 				
-				u = G.findV(p1);
+				u = kNNG.findV(p1);
 				if(u==null)
-					u = G.addV(p1);
+					u = kNNG.addV(p1);
 				
-				v = G.findV(p2);
+				v = kNNG.findV(p2);
 				if(v==null)
-					v = G.addV(p2);
+					v = kNNG.addV(p2);
 				
-				G.addE(u, v, w);
+				kNNG.addE(u, v, w);
 			}
 			
-			k = in.nextInt();
-			while(k-->0){
+			for(Pair<Point,Double> bpPair: nvpPair.getValue().borderPoints){
 				//Border points belonging to generator g
-				x = in.nextDouble();
-				y = in.nextDouble();
-				w = in.nextDouble();
-				borderPoints.add(G.findV(new Point(x,y)));
-				addBPGMapping(g.p,new Point(x,y));
+				borderPoints.add(kNNG.findV(new Point(bpPair.getElement0())));
+				addBPGMapping(g.p,new Point(bpPair.getElement0()));
 			}
 			
 			//Run Dijisktra Algorithm on graph formed above to compute distance between each border points
-			for(Vertex b1:borderPoints){
-				dijisktra.init(G,b1);
+			for(knnQueryStructure.Vertex b1:borderPoints){
+				dijisktra.init(kNNG,b1);
 				dijisktra.run();
-				for(Vertex b2:borderPoints){
+				for(knnQueryStructure.Vertex b2:borderPoints){
 					addD(g.p,b1.p,b2.p,b2.dist);
 				}
 				addD(g.p,b1.p,g.p,g.dist);
@@ -204,7 +196,7 @@ public class Main {
 		findKNN(new Point(1,3), new Point(2,4), 3, pointOfInterests);
 		findKNN(new Point(2,5), new Point(2,4), 3, pointOfInterests);
 		findKNN(new Point(4,6), new Point(4,7), 3, pointOfInterests);
-		findKNN(new Point(2,4), new Point(2,4), 3, pointOfInterests);*/
+		findKNN(new Point(2,4), new Point(2,4), 3, pointOfInterests);
 	}
 	
 	private static void addPoint(Point p1, Point p2){
@@ -251,15 +243,15 @@ public class Main {
 			bPGList.add(g);
 	}
 	
-	private static void findKNN( Point q, Point nn, int K, ArrayList<PointOfInterest> pointOfInterests ){
+	private static void findKNN( Point q, Point nn, int K, ArrayList<knnQueryStructure.PointOfInterest> pointOfInterests ){
 		ArrayList<Pair<Point,Double>>  bPDTable = new ArrayList<Pair<Point,Double>>();
-		PriorityQueue<PointOfInterest> Q = new PriorityQueue<PointOfInterest>();
+		PriorityQueue<knnQueryStructure.PointOfInterest> Q = new PriorityQueue<knnQueryStructure.PointOfInterest>();
 		
-		PointOfInterest poi, poppedPOI;
+		knnQueryStructure.PointOfInterest poi, poppedPOI;
 		double minDist,gDist;
-		Iterator<PointOfInterest> it = null;
+		Iterator<knnQueryStructure.PointOfInterest> it = null;
 		
-		for(PointOfInterest tempPOI: pointOfInterests){
+		for(knnQueryStructure.PointOfInterest tempPOI: pointOfInterests){
 			if(tempPOI.p.equals(nn))
 				tempPOI.dist=0;
 			else
@@ -278,7 +270,7 @@ public class Main {
 					if(poi.p.equals(g)){
 						gDist = Math.min(poi.dist,gDist);
 						Q.remove(poi);
-						Q.add(new PointOfInterest(g, gDist));
+						Q.add(new knnQueryStructure.PointOfInterest(g, gDist));
 						break;
 					}
 				}
@@ -322,7 +314,7 @@ public class Main {
 							if(!poi.popped && poi.equals(g)){
 								gDist = Math.min(poi.dist,gDist);
 								Q.remove(poi);
-								Q.add(new PointOfInterest(g, gDist));
+								Q.add(new knnQueryStructure.PointOfInterest(g, gDist));
 								break;
 							}
 						}

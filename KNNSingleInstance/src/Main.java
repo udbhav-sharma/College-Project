@@ -14,7 +14,6 @@ import graphAlgo.ParallelDijisktra;
 import graphAlgo.NetworkVoronoiDiagram.NetworkVoronoiPolygon;
 import graphAlgo.Vertex.Generator;
 import knnQueryStructure.DistanceTable;
-import knnQueryStructure.PointOfInterest;
 import knnQueryStructure.Dijisktra;
 import util.Log;
 import util.Pair;
@@ -129,7 +128,6 @@ public class Main {
 		 * kNN query
 		 * */
 		Point p1,p2;
-		int k;
 		knnQueryStructure.Vertex g,u,v;
 		knnQueryStructure.Graph kNNG;
 		Dijisktra dijisktra;
@@ -192,6 +190,7 @@ public class Main {
 		
 		//Log.d(distTable);
 		in.close();
+		Log.l("\n-------");
 		findKNN(new Point(1,1), new Point(2,4), 3, pointOfInterests);
 		findKNN(new Point(1,3), new Point(2,4), 3, pointOfInterests);
 		findKNN(new Point(2,5), new Point(2,4), 3, pointOfInterests);
